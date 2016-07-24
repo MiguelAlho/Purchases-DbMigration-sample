@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/src/RestApi/bin/*
+/src/RestApi/obj/*
+/.vs/config/applicationhost.config
+/.vs/Purchases/v14/.suo
+/.vs/restore.dg
+/src/RestApi/project.lock.json
+/src/RestApi/RestApi.xproj.user
