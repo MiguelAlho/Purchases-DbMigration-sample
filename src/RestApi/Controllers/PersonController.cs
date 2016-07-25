@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using RestApi.Models;
 
 namespace RestApi.Controllers
 {
@@ -7,10 +9,20 @@ namespace RestApi.Controllers
     [Produces("application/json")]
     public class PersonController
     {
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IPersonRepository _repository;
+
+        public PersonController(IPersonRepository repository)
         {
-            return new string[] { "value1", "value2" };
+            if(repository == null)
+                throw new ArgumentNullException(nameof(repository));
+
+            _repository = repository;
+        }
+
+        [HttpGet]
+        public IEnumerable<Person> GetListOfPersons()
+        {
+            return _repository.GetListOfPersons();
         }
 
     }
