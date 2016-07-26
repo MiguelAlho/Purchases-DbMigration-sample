@@ -59,9 +59,10 @@ namespace RestApi.SqlServer.IntegrationTests.Database
 
                 DeleteDatabaseFiles(mdf, ldf);
                 CreateNewTestDatabase(connection, mdf, ldf);
-
-                BuildSchema(connection);
             }
+            
+            BuildSchema();
+            
         }
 
         private static void CreateNewTestDatabase(SqlConnection connection, string mdf, string ldf)
@@ -113,9 +114,25 @@ namespace RestApi.SqlServer.IntegrationTests.Database
                 Directory.CreateDirectory(dbpath);
         }
 
-        private void BuildSchema(SqlConnection connection)
+        private void BuildSchema()
         {
-            //use flyway!
+             var connectionString = ConnectionString;
+             var scriptsFolder =    "";
+
+             var upgrader =
+                DeployChanges.To
+                    .SqlDatabase(connectionString)
+                    //.WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                    .WithScriptsFromFileSystem(scriptsFolder)
+                    .LogToConsole()
+                    .Build();
+
+            var result = upgrader.PerformUpgrade();
+
+            if (!result.Successful)
+            {
+                throw new Exception("unable to migrate: " + result.Error);
+            }
         }
         
         public void ClearRecords()

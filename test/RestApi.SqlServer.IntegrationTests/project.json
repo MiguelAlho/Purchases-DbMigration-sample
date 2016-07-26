@@ -8,7 +8,9 @@
 
         "System.Data.SqlLocalDb": "1.15.0",
         "Dapper": "1.50.2",
-        "DapperWrapper": "0.3.0"
+        "DapperWrapper": "0.3.0",
+
+        "dbup": "1.0.37"
     },
 
     "testRunner": "xunit",
