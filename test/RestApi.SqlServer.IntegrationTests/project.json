@@ -10,7 +10,9 @@
         "Dapper": "1.50.2",
         "DapperWrapper": "0.3.0",
 
-        "dbup": "1.0.37"
+        "dbup": "3.3.3"
+
+
     },
 
     "testRunner": "xunit",

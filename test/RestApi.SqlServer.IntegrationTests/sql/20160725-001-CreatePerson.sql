@@ -1,5 +1,5 @@
 ﻿Create Table Person
 (
-	Id guid NOT NULL,
+	Id uniqueidentifier NOT NULL,
 	Name varchar(100) NOT NULL
 );

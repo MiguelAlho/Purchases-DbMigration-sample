@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DapperWrapper;
+using DbUp;
 
 namespace RestApi.SqlServer.IntegrationTests.Database
 {
@@ -117,9 +118,9 @@ namespace RestApi.SqlServer.IntegrationTests.Database
         private void BuildSchema()
         {
              var connectionString = ConnectionString;
-             var scriptsFolder =    "";
+             var scriptsFolder = Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\sql");
 
-             var upgrader =
+            var upgrader =
                 DeployChanges.To
                     .SqlDatabase(connectionString)
                     //.WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
@@ -137,10 +138,24 @@ namespace RestApi.SqlServer.IntegrationTests.Database
         
         public void ClearRecords()
         {
-            using (IDbExecutor exec = new SqlExecutor(GetNewOpenConnection()))
+            string[] tables = new[] { "Person" };
+
+            List<Task> tasks = new List<Task>(tables.Length);
+
+            using (var con = GetNewOpenConnection())
             {
-                exec.Execute("Delete * From Person");
+                foreach (var table in tables)
+                {
+                    using (var cmd = new SqlCommand("DELETE FROM " + table, con))
+                    {
+                        tasks.Add(cmd.ExecuteNonQueryAsync());
+                    }
+                }
+
+                Task.WaitAll(tasks.ToArray());
             }
+
+
         }
     }
 }

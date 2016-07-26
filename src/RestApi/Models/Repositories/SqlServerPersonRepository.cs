@@ -24,7 +24,7 @@ namespace RestApi.Models.Repositories
         public IEnumerable<Person> GetListOfPersons()
         {
             List<Person> results = new List<Person>();
-            var queryText = "Select * From Persons";
+            var queryText = "Select * From Person";
 
             using (var connection = new SqlConnection(_connectionString))
             using (var query = new SqlCommand(queryText, connection))
