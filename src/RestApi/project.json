@@ -12,8 +12,10 @@
     "system.data.sqlclient": "4.1.0-rc2-24027",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0"
+
   },
 
+  
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
   },
@@ -31,12 +33,14 @@
     }
   },
 
-  "publishOptions": {
-    "include": [
-      "wwwroot",
-      "web.config"
-    ]
-  },
+    "publishOptions": {
+        "include": [
+            "wwwroot",
+            "web.config",
+            "appsettings.json",
+            "RestApi.nuspec"
+        ]
+    },
 
   "scripts": {
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
