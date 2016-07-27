@@ -2,7 +2,10 @@
     "version": "1.0.0-*",
 
     "dependencies": {
-        "RestApi": "1.0.0-*",
+      "RestApi": {
+        "target": "project",
+        "version": "1.0.0-*"
+      },
         "xunit": "2.2.0-beta2-build3300",
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
         
@@ -13,20 +16,6 @@
     
 
     "frameworks": {
-        "net451": {},
-        "netcoreapp1.0": {
-            "imports": [
-                "dotnet5.6",
-                "netstandard1.6",
-                "portable-net45+win8"
-            ],
-            "dependencies": {
-                "Microsoft.NETCore.App": {
-                    "version": "1.0.0-*",
-                    "type": "platform"
-                }
-            }
-        }
-
+        "net451":{}
     }
 }
