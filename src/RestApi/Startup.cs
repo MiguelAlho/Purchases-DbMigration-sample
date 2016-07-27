@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using RestApi.Models;
+using RestApi.Models.Repositories;
 using Swashbuckle.Swagger.Model;
+using Microsoft.Extensions.Configuration;
 
 namespace RestApi
 {
@@ -18,6 +22,14 @@ namespace RestApi
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var connectionStringConfig = builder.Build();
+
+
+            services.AddOptions();
+
             services
                .AddMvc()
                .AddJsonOptions(options =>
@@ -35,6 +47,11 @@ namespace RestApi
                 });
             });
 
+            services.Configure<DbConfiguration>(configuration =>
+            {
+                configuration.ConnectionString = connectionStringConfig.GetConnectionString("DefaultConnection");
+            });
+            services.AddSingleton(typeof(IPersonRepository), typeof(SqlServerPersonRepository));
 
         }
 

@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace RestApi.Models.Repositories
 {
@@ -11,12 +12,14 @@ namespace RestApi.Models.Repositories
     {
         readonly string _connectionString;
 
-        public SqlServerPersonRepository(string conString)
+        public SqlServerPersonRepository(IOptions<DbConfiguration> dbOptions)
         {
-            if (string.IsNullOrWhiteSpace(conString))
-                throw new ArgumentException(nameof(conString));
+            if (dbOptions == null)
+                throw new ArgumentException(nameof(dbOptions));
+            if (string.IsNullOrWhiteSpace(dbOptions.Value.ConnectionString))
+                throw new ArgumentException("connectionsString");
 
-            _connectionString = conString;
+            _connectionString = dbOptions.Value.ConnectionString;
         }
 
 

@@ -1,18 +1,17 @@
 ﻿{
   "dependencies": {
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-    
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
     "Microsoft.Extensions.Logging.Console": "1.0.0",
-
+    "Microsoft.Extensions.Configuration": "1.0.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
-
     "Swashbuckle.SwaggerGen": "6.0.0-beta901",
     "Swashbuckle.SwaggerUi": "6.0.0-beta901",
-
-    "system.data.sqlclient": "4.1.0-rc2-24027"
-
+    "system.data.sqlclient": "4.1.0-rc2-24027",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0"
   },
 
   "tools": {

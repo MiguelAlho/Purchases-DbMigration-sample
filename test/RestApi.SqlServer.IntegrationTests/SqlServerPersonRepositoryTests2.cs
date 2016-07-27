@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using DapperWrapper;
+using Microsoft.Extensions.Options;
 using RestApi.Models.Repositories;
 using RestApi.SqlServer.IntegrationTests.Database;
 using Xunit;
@@ -13,6 +14,7 @@ namespace RestApi.SqlServer.IntegrationTests
     public class SqlServerPersonRepositoryTests : IClassFixture<DbTestFixture>
     {
         readonly DbTestFixture _fixture;
+        readonly IOptions<DbConfiguration> _config;
 
         Guid id1 = new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
         Guid id2 = new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2);
@@ -23,6 +25,12 @@ namespace RestApi.SqlServer.IntegrationTests
         public SqlServerPersonRepositoryTests(DbTestFixture fixture)
         {
             _fixture = fixture;
+
+            _config = new OptionsManager<DbConfiguration>(new[]
+            {
+                new ConfigureOptions<DbConfiguration>(configuration => 
+                    configuration.ConnectionString = _fixture.ConnectionString),
+            });
         }
 
         [Fact]
@@ -32,7 +40,7 @@ namespace RestApi.SqlServer.IntegrationTests
             _fixture.ClearRecords();
             AddPersonsToDatabase();
 
-            var repo = new SqlServerPersonRepository(_fixture.ConnectionString);
+            var repo = new SqlServerPersonRepository(_config);
 
             var result = repo.GetListOfPersons();
 
@@ -62,7 +70,10 @@ namespace RestApi.SqlServer.IntegrationTests
         public void CanReadEmptyPersonListWhenNoDataExists()
         {
             _fixture.ClearRecords();
-            var repo = new SqlServerPersonRepository(_fixture.ConnectionString);
+
+            
+            var repo = new SqlServerPersonRepository(_config);
+
 
             var result = repo.GetListOfPersons();
 
