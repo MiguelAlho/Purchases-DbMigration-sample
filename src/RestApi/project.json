@@ -1,4 +1,6 @@
 ﻿{
+  "compileExclude": "*.cs_",
+
   "dependencies": {
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
@@ -18,10 +20,10 @@
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
   },
 
-    "frameworks": {
-        "net451": {}
-        
-    },
+  "frameworks": {
+    "net451": {}
+
+  },
 
   "buildOptions": {
     "emitEntryPoint": true,

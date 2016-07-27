@@ -22,11 +22,7 @@ namespace RestApi
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var builder = new ConfigurationBuilder();
-            builder.SetBasePath(Directory.GetCurrentDirectory());
-            builder.AddJsonFile("appsettings.json");
-            var connectionStringConfig = builder.Build();
-
+            IConfigurationRoot connectionStringConfig = ReadConfiguration();
 
             services.AddOptions();
 
@@ -53,6 +49,15 @@ namespace RestApi
             });
             services.AddSingleton(typeof(IPersonRepository), typeof(SqlServerPersonRepository));
 
+        }
+
+        private static IConfigurationRoot ReadConfiguration()
+        {
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var connectionStringConfig = builder.Build();
+            return connectionStringConfig;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
