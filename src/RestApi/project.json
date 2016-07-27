@@ -1,6 +1,4 @@
 ﻿{
-  "compileExclude": "*.cs_",
-
   "dependencies": {
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
@@ -27,7 +25,10 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "compile": {
+        "exclude": "*.cs_" 
+    }
   },
 
   "publishOptions": {
