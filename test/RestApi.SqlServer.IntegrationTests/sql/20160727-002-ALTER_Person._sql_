@@ -1,0 +1,14 @@
+﻿ALTER TABLE Person ADD FirstName varchar(100) NOT NULL DEFAULT '';
+ALTER TABLE Person ADD LastName varchar(100) NOT NULL DEFAULT '';
+
+GO
+
+UPDATE PERSON
+SET 
+	FirstName = SUBSTRING(Name, 1, CHARINDEX(' ', Name) - 1),
+	LastName = REVERSE(SUBSTRING(REVERSE(Name), 1, CHARINDEX(' ', REVERSE(Name)) - 1));
+
+GO
+
+ALTER TABLE Person DROP COLUMN Name;
+
