@@ -43,11 +43,7 @@ namespace RestApi
                 });
             });
 
-            services.Configure<DbConfiguration>(configuration =>
-            {
-                configuration.ConnectionString = connectionStringConfig.GetConnectionString("DefaultConnection");
-            });
-            services.AddSingleton(typeof(IPersonRepository), typeof(SqlServerPersonRepository));
+            services.AddSingleton(typeof(IPersonRepository), typeof(InMemoryPersonRepository));
 
         }
 
