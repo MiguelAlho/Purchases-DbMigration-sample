@@ -8,7 +8,7 @@ $dbAllNames = $dbList -split ","
 
 foreach($dbName in $dbAllNames)
 {	
-	nuget pack .\$repFolder\$dbName\$dbName.nuspec -Version 0.0.$buildNumber -OutputDirectory "..\packages"
+	nuget.exe pack .\$dbName.nuspec -Version 0.0.$buildNumber -OutputDirectory "..\packages"
 }
 
 exit $LastExitCode
