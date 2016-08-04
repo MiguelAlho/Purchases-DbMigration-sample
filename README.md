@@ -34,10 +34,33 @@ Because the app will use a database, the team has considered the following:
 
 Since the production database will be SqlServer, they consider LocalDb to be a fine element to include in the test strategy. LocalDb has everything they need for now, and the same SQL scripts and clients work correctly. In order to manage the migrations, the team has opted for two compatible strategies. For CI/CD deployments, they will use flyway to manage the migration, since the ops team has plenty of experience from other projects in using it. For the tests, and since Flyway cannot connect to LocalDb to perform the migration, they will use DBUp in the test project to perfrom the migration.
 
+The `RestApi.SqlServer.IntegrationTests`project includes the relevant code for testing and manages the SQLScripts for the migrations. Scripts are placed in the project's sql folder and can be picked up and packaged in the build process. For this step in the story, a single script is necessary and includes the `Create Table Person(...)` command. For the demo, we can show tests working for us by creating invalid commands (like using `uuid` instead of `uniqueidentifier`, to simulate dev errors). A key element in this project is the `DbTestFixture` class that has the setup code for the tests. All test classes in this project will/should implement `IClassFixture<DbTestFixture>` allowing this class to be constructed a single time in the test run. The `CreateTestDb()` method gets called in this process and does the following:
+- Makes sure the test db folder is available
+- clearing any previous database, including detatching it
+- creating a new database file for this test run (connecting to the server)
+- Rebuilding the schema (connectiong to the database)
+
+Rebuilding the schema is done with DBup, by creating an `UpgradeEngine` instance (using the `DeployChanges` builder with the scripts in the sql folder) and calling `PerformUpgrade()`. `DbTestFixture` also exposes Connection and ConnectionString getters, and the `ClearRecords` method that can be used to clear out any data that previous tests may have included. It should be called before each test is run.
+
+`SqlServerPersonRepositoryTests` implements a pair of tests that actually use the database. Notice that at the beginning of each test there isa call to `_fixture.ClearRecords()`to clear out data. Also, any data that is necessary in the database for the test can be included next, as the `CanReadPersonListFromDatabase` test does in adding persons to the database. This involves creating mechanisms to add data in a controlled manner, in order for assertiosn to be correct. `AddPersonsToDatabase()`adds two records that the team controls completely, and can Assert on.
+
+With all of this, the build pipline can add script packaging steps and the deployment process can start with a database migration step, using Flyway to run the unapplied scripts.
+
+##step 3 - changes in business
+
+So, The service is a success, and as usual, one client has a request. They would like that the first and last name be seperated since it would be easier and useful for other types of operations and stories they would like to include as they move foward. That team has agreed to include these changes in the next iteration. The Ops team has run some requested analysis on the table and verified that all the records are simply first and last name, seperated by a space, and can easily be changed without data loss.
+
+The `step3-aleter_sql_person`branch is the result of this change. `Person` now includes `FirstName` and `LastName` properties, but maintains the Name property for API compatibility. `SqlServerPersonRepository`has also slightly changed - the query garantees the new columns can be obtained, and the reader maps the colomns to the object correctly. Demowise, we can show how tests help us catch errors in the part of the code while performing the changes (bad column names in the query and reader, missing column at the test db , etc.).
+
+At the integration test project, we've included a new script to run the chnages as a migration. The migration here involves add the new columns (preserving the existing ones), moving data from the original Name column to the new columns, and then optionally droping the name column (depending on guaranteeing that nothing else is using it, as in our case here). Test ise, slight changes were made to reflect the changes in schema and assert on the new expectations. This is where we may feel most of the burden of managing and maintaining the integration test suite, though the benifits of having it far outweight its absence.
+
+With everything implemented, tests passing and the build job building, the new version can be deployed at any time.
 
 
+###Note:
 
+The code may not be completely correct (such as using `SELECT * ` but during the demo those changes anc corrections can be performed to show off the test suite helping use change the code confidently.
 
-This repo actually has absolutely nothing to do with purchases, but my initial idea for the sample domain was commerce.
+This repo actually has absolutely nothing to do with purchases, but my initial idea for the sample domain was commerce. The only idea that stood through was really the Person entity, and was enough to show the idea and how-to
 
 
